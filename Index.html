@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Princípio de Le Châtelier</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 30px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    #reactionEquation {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 20px auto;
+      color: #222;
+    }
+
+    .levels span {
+      display: inline-block;
+      width: 120px;
+      font-size: 18px;
+    }
+
+    button {
+      margin: 6px;
+      padding: 10px 18px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .info {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Plataforma - Princípio de Le Châtelier</h1>
+
+  <div id="reactionEquation">
+    N₂ + 3H₂ ⇌ 2NH₃ (Sem equilíbrio)
+  </div>
+
+  <div class="levels">
+    <span id="n2">N₂: 0</span>
+    <span id="h2">H₂: 0</span>
+    <span id="nh3">NH₃: 0</span>
+  </div>
+
+  <div>
+    <button onclick="change('n2', 1)">Adicionar N₂</button>
+    <button onclick="change('h2', 1)">Adicionar H₂</button>
+    <button onclick="change('nh3', 1)">Adicionar NH₃</button><br>
+    <button onclick="change('n2', -1)">Remover N₂</button>
+    <button onclick="change('h2', -1)">Remover H₂</button>
+    <button onclick="change('nh3', -1)">Remover NH₃</button>
+  </div>
+
+  <div class="info" id="equilibriumText">
+    Sistema fora de equilíbrio.
+  </div>
+
+  <script>
+    let levels = {
+      n2: 0,
+      h2: 0,
+      nh3: 0
+    };
+
+    function updateDisplay() {
+      document.getElementById('n2').innerText = "N₂: " + levels.n2;
+      document.getElementById('h2').innerText = "H₂: " + levels.h2;
+      document.getElementById('nh3').innerText = "NH₃: " + levels.nh3;
+
+      const eqText = document.getElementById("equilibriumText");
+      const equation = document.getElementById("reactionEquation");
+
+      // Calcular proporções
+      let ratioN2 = levels.n2;
+      let ratioH2 = levels.h2 / 3;
+      let ratioNH3 = levels.nh3 / 2;
+
+      // Determinar a menor razão entre os reagentes
+      let minRatio = Math.min(ratioN2, ratioH2);
+
+      // Verificar se as proporções estão próximas do equilíbrio (1:3:2)
+      if (levels.n2 === 1 && levels.h2 === 3 && levels.nh3 === 2) {
+        eqText.innerText = "Sistema em equilíbrio.";
+        equation.innerText = "N₂ + 3H₂ ⇌ 2NH₃ (Equilíbrio)";
+      } else if (ratioNH3 < minRatio) {
+        eqText.innerText = "Equilíbrio deslocado para a direita → formando mais NH₃.";
+        equation.innerText = "N₂ + 3H₂ ⇌ 2NH₃ (Exotérmica)";
+      } else if (ratioNH3 > minRatio) {
+        eqText.innerText = "Equilíbrio deslocado para a esquerda → formando mais reagentes.";
+        equation.innerText = "N₂ + 3H₂ ⇌ 2NH₃ (Endotérmica)";
+      } else {
+        eqText.innerText = "Sistema fora de equilíbrio.";
+        equation.innerText = "N₂ + 3H₂ ⇌ 2NH₃ (Sem equilíbrio)";
+      }
+    }
+
+    function change(compound, delta) {
+      if (levels[compound] + delta >= 0) {
+        levels[compound] += delta;
+        updateDisplay();
+      }
+    }
+
+    updateDisplay();
+  </script>
+
+</body>
+</html>
