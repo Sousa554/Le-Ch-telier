@@ -26,13 +26,13 @@
 
     .levels span {
       display: inline-block;
-      width: 100px;
+      width: 120px;
       font-size: 18px;
     }
 
     button {
-      margin: 10px;
-      padding: 10px 20px;
+      margin: 8px;
+      padding: 10px 18px;
       font-size: 16px;
       cursor: pointer;
     }
@@ -42,6 +42,12 @@
       margin-top: 20px;
       color: #007acc;
     }
+
+    .reaction-type {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #444;
+    }
   </style>
 </head>
 <body>
@@ -49,7 +55,7 @@
   <h1>Plataforma - Princípio de Le Châtelier</h1>
 
   <div class="reaction">
-    N₂ + 3H₂ ⇌ 2NH₃
+    N₂ + 3H₂ ⇌ 2NH₃ (Exotérmica)
   </div>
 
   <div class="levels">
@@ -59,13 +65,20 @@
   </div>
 
   <div>
-    <button onclick="add('n2')">Adicionar N₂</button>
-    <button onclick="add('h2')">Adicionar H₂</button>
-    <button onclick="add('nh3')">Adicionar NH₃</button>
+    <button onclick="change('n2', 1)">Adicionar N₂</button>
+    <button onclick="change('h2', 1)">Adicionar H₂</button>
+    <button onclick="change('nh3', 1)">Adicionar NH₃</button>
+    <br>
+    <button onclick="change('n2', -1)">Remover N₂</button>
+    <button onclick="change('h2', -1)">Remover H₂</button>
   </div>
 
   <div class="equilibrium" id="equilibriumText">
     Sistema em equilíbrio.
+  </div>
+
+  <div class="reaction-type" id="reactionTypeText">
+    Tipo de reação: Nenhuma alteração detectada.
   </div>
 
   <script>
@@ -81,22 +94,29 @@
       document.getElementById('nh3').innerText = "NH₃: " + levels.nh3;
 
       const eq = document.getElementById("equilibriumText");
+      const type = document.getElementById("reactionTypeText");
 
       if (levels.n2 > 1 || levels.h2 > 3) {
         eq.innerText = "Equilíbrio deslocado para a direita (formando mais NH₃).";
-      } else if (levels.nh3 > 2) {
+        type.innerText = "Tipo de reação: Exotérmica.";
+      } else if (levels.nh3 > 2 || levels.n2 < 1 || levels.h2 < 3) {
         eq.innerText = "Equilíbrio deslocado para a esquerda (formando mais reagentes).";
+        type.innerText = "Tipo de reação: Endotérmica.";
       } else {
         eq.innerText = "Sistema em equilíbrio.";
+        type.innerText = "Tipo de reação: Nenhuma alteração detectada.";
       }
     }
 
-    function add(compound) {
-      levels[compound]++;
-      updateDisplay();
+    function change(compound, delta) {
+      if (levels[compound] + delta >= 0) {
+        levels[compound] += delta;
+        updateDisplay();
+      }
     }
 
     updateDisplay();
   </script>
 </body>
 </html>
+
